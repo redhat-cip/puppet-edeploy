@@ -48,5 +48,9 @@ class edeploy {
     ensure => installed,
   }
 
+  class {'edeploy::tftpserver' :
+    address => $::ipaddress,
+  }
+
 
 }
