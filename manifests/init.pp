@@ -35,7 +35,10 @@
 #
 # Copyright 2013 Your name here, unless otherwise noted.
 #
-class edeploy {
+class edeploy (
+  $rsync_exports = {},
+  $rsync_max_connections = '50'
+) {
 
   include edeploy::params
   include stdlib
@@ -50,6 +53,12 @@ class edeploy {
 
   class {'edeploy::tftpserver' :
     address => $::ipaddress,
+  }
+
+  class {'edeploy::rsyncserver' :
+    exports         => $rsync_exports,
+    max_connections => $rsync_max_connections,
+    address         => $::ipaddress,
   }
 
 
