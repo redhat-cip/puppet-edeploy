@@ -1,0 +1,13 @@
+[SERVER]
+
+HEALTHDIR   = <%= @healthdir %>
+CONFIGDIR   = <%= @configdir  %>
+LOGDIR      = <%= @logdir %>
+HWDIR       = <%= @hwdir %>
+LOCKFILE    = <%= @lockfile %>
+<% if @userpxemngr -%>
+USEPXEMNGR  = <%= True %>
+PXEMNGRURL  = <%= @pxemngrurl %>
+METADATAURL = <%= @metadataurl %>
+<% end -%>
+
