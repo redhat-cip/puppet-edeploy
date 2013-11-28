@@ -1,39 +1,108 @@
+#
+# Copyright (C) 2013 eNovance SAS <licensing@enovance.com>
+#
+# Author: Yanis Guenane <yanis.guenane@enovance.com>
+#
+# Licensed under the Apache License, Version 2.0 (the "License"); you may
+# not use this file except in compliance with the License. You may obtain
+# a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+# WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+# License for the specific language governing permissions and limitations
+# under the License.
+
 # == Class: edeploy
 #
-# Full description of class edeploy here.
+# eDeploy base class. This class does the installation of prerequistes,
+# the installation of eDeploy itself and its configuration
 #
 # === Parameters
 #
-# Document parameters here.
+# [*rsync_exports*]
+#   (dictionnary) The set of rsync export
 #
-# [*sample_parameter*]
-#   Explanation of what this parameter affects and what it defaults to.
-#   e.g. "Specify one or more upstream ntp servers as an array."
+# [*rsync_max_connections*]
+#   (integer) Number of max connections per export
 #
-# === Variables
+# [*webserver_docroot*]
+#   (string) Path to store eDeploy python script HTTP accessible (upload.py)
 #
-# Here you should define a list of variables that this module would require.
+# [*giturl*]
+#   (string) GIT url where the eDeploy project should be retrieved from
 #
-# [*sample_variable*]
-#   Explanation of how this variable affects the funtion of this class and if
-#   it has a default. e.g. "The parameter enc_ntp_servers must be set by the
-#   External Node Classifier as a comma separated list of hostnames." (Note,
-#   global variables should be avoided in favor of class parameters as
-#   of Puppet 2.6.)
+# [*installdir*]
+#   (string) Path where eDeploy will be installed
+#
+# [*healthdir*]
+#   (string) Path for eDeploy health related files
+#
+# [*configdir*]
+#   (string) Path for eDeploy configuration related files
+#
+# [*logdir*]
+#   (string) Path for eDeploy log files
+#
+# [*hwdir*]
+#   (string) Path for eDeploy harware report file
+#
+# [*lockfile*]
+#   (string) Path for eDeplou lock file
+#
+# [*usepxemngr*]
+#   (boolean) Enable pxemngr
+#
+# [*tftproot*]
+#   (string) Path for tftp root
+#
+# [*serv*]
+#   (string) IP of the eDeploy server
+#
+# [*rserv*]
+#   (string) IP of the rsync eDeploy server
+#
+# [*rserv_port*]
+#   (integer) Port on which the rsync eDeploy server is listening
+#
+# [*hserv*]
+#   (string) IP of the HTTP eDeploy server
+#
+# [*hserv_port*]
+#   (integer) Port on which the HTTP eDeploy server is listening
+#
+# [*onfailure*]
+#   (string) Action to take on failure
+#
+# [*onsuccess*]
+#   (string) Action to take on success
+#
+# [*verbose*]
+#   (boolean) Enable verbose mode
+#
+# [*upload_log*]
+#   (boolean) Enable log upload
+#
+# [*http_path*]
+#   (string) URL Path for upload.py
+#
+# [*htpp_port*]
+#   (integer) Port on which to query upload.py
 #
 # === Examples
 #
-#  class { edeploy:
-#    servers => [ 'pool.ntp.org', 'ntp.local.company.com' ],
+#  class {'edeploy' :
+#    rsync_exports     => {'install' => {'path' => '/var/lib/debootstrap/install', 'comment' => 'The Install Path'},
+#                          'metadata' => {'path' => '/var/lib/debootstrap/metadata', 'comment' => 'The Metadata Path'},},
+#    onfailure         => 'console',
+#    http_port         => 80,
+#    http_path         => '/',
+#    upload_log        => 1,
+#    onsuccess         => 'kexec',
+#    webserver_docroot => '/var/www/edeploy',
 #  }
-#
-# === Authors
-#
-# Author Name <author@domain.com>
-#
-# === Copyright
-#
-# Copyright 2013 Your name here, unless otherwise noted.
 #
 class edeploy (
   $rsync_exports = {},
@@ -47,7 +116,7 @@ class edeploy (
   $logdir = '/var/lib/edeploy/config/logs',
   $hwdir = '/var/lib/edeploy/hw/',
   $lockfile = '/tmp/edeploy.lock',
-  $userpxemngr = false,
+  $usepxemngr = false,
   $tftproot = '/var/lib/tftpboot',
   $serv = $::ipaddress,
   $rserv = undef,
@@ -58,7 +127,7 @@ class edeploy (
   $onsuccess = undef,
   $verbose = undef,
   $upload_log = undef,
-  $http_path = undef, 
+  $http_path = undef,
   $http_port = undef
 ) {
 
@@ -76,7 +145,7 @@ class edeploy (
     onsuccess             => $onsuccess,
     verbose               => $verbose,
     upload_log            => $upload_log,
-    http_path             => $http_path, 
+    http_path             => $http_path,
     http_port             => $http_port,
     rsync_exports         => $rsync_exports,
     rsync_max_connections => $rsync_max_connections,
@@ -95,7 +164,7 @@ class edeploy (
     logdir      => $logdir,
     hwdir       => $hwdir,
     lockfile    => $lockfile,
-    userpxemngr => $userpxemngr,
+    usepxemngr  => $usepxemngr,
     require     => Class['edeploy::installation'],
   }
 
