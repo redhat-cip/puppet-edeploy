@@ -62,77 +62,41 @@ class edeploy (
   $http_port = undef
 ) {
 
-  include edeploy::params
   include stdlib
 
-
-  # TODO (spredzy) : Move all the code below to a edeploy::prequisite class
-  include devtools
-
-  package {$edeploy::params::packages :
-    ensure => installed,
+  class {'edeploy::prerequisites' :
+    address               => $::ipaddress,
+    tftproot              => $tftproot,
+    serv                  => $serv,
+    rserv                 => $rserv,
+    rserv_port            => $rserv_port,
+    hserv                 => $hserv,
+    hserv_port            => $hserv_port,
+    onfailure             => $onfailure,
+    onsuccess             => $onsuccess,
+    verbose               => $verbose,
+    upload_log            => $upload_log,
+    http_path             => $http_path, 
+    http_port             => $http_port,
+    rsync_exports         => $rsync_exports,
+    rsync_max_connections => $rsync_max_connections,
+    webserver_docroot     => $webserver_docroot,
+    webserver_port        => $webserver_port,
   }
-
-  # NOTE (spredzy) : Wheezy profile is missing in RHEL 6.4 debootstrap package
-  #                  It's being create here. A request upstream might be done.
-  if $::osfamily == 'RedHat' {
-    file {'/usr/share/debootstrap/scripts/wheezy' :
-      ensure => 'link',
-      target => '/usr/share/debootstrap/scripts/sid',
-    }
+  class {'edeploy::installation' :
+    giturl            => $giturl,
+    installdir        => $installdir,
+    webserver_docroot => $webserver_docroot,
+    require           => Class['edeploy::prerequisites'],
   }
-
-  class {'edeploy::tftpserver' :
-    address    => $::ipaddress,
-    directory  => $tftproot,
-    serv       => $serv,
-    rserv      => $rserv,
-    rserv_port => $rserv_port,
-    hserv      => $hserv,
-    hserv_port => $hserv_port,
-    onfailure  => $onfailure,
-    onsuccess  => $onsuccess,
-    verbose    => $verbose,
-    upload_log => $upload_log,
-    http_path  => $http_path, 
-    http_port  => $http_port,
-  }
-
-  class {'edeploy::rsyncserver' :
-    exports         => $rsync_exports,
-    max_connections => $rsync_max_connections,
-    address         => $::ipaddress,
-  }
-
-  class {'edeploy::webserver' :
-    docroot => $webserver_docroot,
-    port    => $webserver_port,
-  }
-
-  # TODO (spredzy) : Move all the code below to edeploy::installation class
-  
-  exec { "git clone ${giturl} ${installdir}/edeploy" :
-    unless => "ls ${installdir}/edeploy",
-    path   => ['/usr/bin', '/bin'],
-  } 
-  exec { "git pull origin" :
-    onlyif  => "ls ${installdir}/edeploy",
-    path    => ['/usr/bin', '/bin'],
-    cwd     => "${installdir}/edeploy",
-    require => Exec["git clone ${giturl} ${installdir}/edeploy"],
-  } 
- 
-  # NOTE (spredzy) : Not idempotent, will be move copied everyrun atm.
-  #                  Might want to check if content is !=
-  exec { "cp ${installdir}/edeploy/server/*.py ${webserver_docroot}/" :
-    path    => '/bin',
-    require => Exec['git pull origin'],
-  }
-
-  # TODO (spredzy) : Move all the code below to edeploy::configuration class
-  file {'/etc/edeploy.conf' :
-    ensure  => file,
-    content => template('edeploy/etc/edeploy.conf.erb'),
+  class {'edeploy::configuration' :
+    healthdir   => $healthdir,
+    configdir   => $configdir,
+    logdir      => $logdir,
+    hwdir       => $hwdir,
+    lockfile    => $lockfile,
+    userpxemngr => $userpxemngr,
+    require     => Class['edeploy::installation'],
   }
 
 }
