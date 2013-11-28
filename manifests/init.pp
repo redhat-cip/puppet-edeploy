@@ -91,6 +91,9 @@
 # [*htpp_port*]
 #   (integer) Port on which to query upload.py
 #
+# [*state*]
+#   (hash) State file tuple
+#
 # === Examples
 #
 #  class {'edeploy' :
@@ -128,7 +131,8 @@ class edeploy (
   $verbose = undef,
   $upload_log = undef,
   $http_path = undef,
-  $http_port = undef
+  $http_port = undef,
+  $state = {},
 ) {
 
   include stdlib
@@ -165,6 +169,7 @@ class edeploy (
     hwdir       => $hwdir,
     lockfile    => $lockfile,
     usepxemngr  => $usepxemngr,
+    state       => $state,
     require     => Class['edeploy::installation'],
   }
 

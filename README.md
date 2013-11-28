@@ -10,15 +10,16 @@ eDeploy puppet module comes with sane defaults for each value, but if needed eDe
  
 ```
     class {'edeploy' :
-      rsync_exports => {'install' => {'path' => '/var/lib/debootstrap/install', 'comment' => 'The Install Path'},
-                        'metadata' => {'path' => '/var/lib/debootstrap/metadata', 'comment' => 'The Metadata Path'},},
-      onfailure => 'console',
-      rserv_port => 873,
-      http_port => 80,
-      http_path => '/',
-      upload_log => 1,
-      onsuccess => 'kexec',
+      rsync_exports     => {'install' => {'path' => '/var/lib/debootstrap/install', 'comment' => 'The Install Path'},
+                            'metadata' => {'path' => '/var/lib/debootstrap/metadata', 'comment' => 'The Metadata Path'},},
+      onfailure         => 'console',
+      rserv_port        => 873,
+      http_port         => 80,
+      http_path         => '/',
+      upload_log        => 1,
+      onsuccess         => 'kexec',
       webserver_docroot => '/var/www/edeploy',
+      steate            => {'vm-centos' => '*', 'hp' => '4'},
     }
 ```
  

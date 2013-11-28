@@ -39,18 +39,27 @@
 # [*usepxemanager*]
 #   Refer to Class['edeploy']
 #
+# [*state*]
+#   Refer to Class['edeploy']
+#
 class edeploy::configuration (
   $healthdir,
   $configdir,
   $logdir,
   $hwdir,
   $lockfile,
-  $usepxemngr
+  $usepxemngr,
+  $state
 ) {
 
   file {'/etc/edeploy.conf' :
     ensure  => file,
     content => template('edeploy/etc/edeploy.conf.erb'),
+  }
+
+  file {"${configdir}/state" :
+    ensure  => file,
+    content => template('edeploy/state.erb'),
   }
 
 }
