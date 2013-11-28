@@ -37,12 +37,16 @@
 #
 class edeploy (
   $rsync_exports = {},
-  $rsync_max_connections = '50'
+  $rsync_max_connections = '50',
+  $webserver_docroot = '/var/www/edeploy',
+  $webserver_port = 80
 ) {
 
   include edeploy::params
   include stdlib
 
+
+  # TODO (spredzy) : Move all the code below to a edeploy::prequisite class
   if $::osfamily == 'RedHat' {
     require epel
   }
@@ -59,6 +63,11 @@ class edeploy (
     exports         => $rsync_exports,
     max_connections => $rsync_max_connections,
     address         => $::ipaddress,
+  }
+
+  class {'edeploy::webserver' :
+    docroot => $webserver_docroot,
+    port    => $webserver_port,
   }
 
 
