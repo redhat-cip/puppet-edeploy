@@ -58,6 +58,9 @@
 # [*usepxemngr*]
 #   (boolean) Enable pxemngr
 #
+# [*enable_tftp*]
+#   (boolean) Enable tftp server
+#
 # [*tftproot*]
 #   (string) Path for tftp root
 #
@@ -124,6 +127,7 @@ class edeploy (
   $hwdir                 = '/var/lib/edeploy/hw/',
   $lockfile              = '/tmp/edeploy.lock',
   $usepxemngr            = false,
+  $enable_tftp           = true,
   $tftproot              = '/var/lib/tftpboot',
   $serv                  = $::ipaddress,
   $rserv                 = $::ipaddress,
@@ -143,6 +147,7 @@ class edeploy (
 
   class {'edeploy::prerequisites' :
     address               => $::ipaddress,
+    enable_tftp           => $enable_tftp,
     tftproot              => $tftproot,
     serv                  => $serv,
     rserv                 => $rserv,

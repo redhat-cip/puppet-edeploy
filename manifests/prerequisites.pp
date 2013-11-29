@@ -24,6 +24,9 @@
 # [*address*]
 #   Refer to Class['edeploy']
 #
+# [*enable_tftp*]
+#   Refer to Class['edeploy']
+#
 # [*tftproot*]
 #   (boolean) Enable access log
 #
@@ -77,6 +80,7 @@
 #
 class edeploy::prerequisites (
     $address               = undef,
+    $enable_tftp           = undef,
     $tftproot              = undef,
     $serv                  = undef,
     $rserv                 = undef,
@@ -120,21 +124,23 @@ class edeploy::prerequisites (
       }
   }
 
-  class {'edeploy::tftpserver' :
-    address      => $address,
-    directory    => $tftproot,
-    serv         => $serv,
-    rserv        => $rserv,
-    rserv_port   => $rserv_port,
-    hserv        => $hserv,
-    hserv_port   => $hserv_port,
-    onfailure    => $onfailure,
-    onsuccess    => $onsuccess,
-    verbose      => $verbose,
-    upload_log   => $upload_log,
-    http_path    => $http_path,
-    http_port    => $http_port,
-    enable_rsync => $enable_rsync,
+  if $enable_tftp {
+      class {'edeploy::tftpserver' :
+        address      => $address,
+        directory    => $tftproot,
+        serv         => $serv,
+        rserv        => $rserv,
+        rserv_port   => $rserv_port,
+        hserv        => $hserv,
+        hserv_port   => $hserv_port,
+        onfailure    => $onfailure,
+        onsuccess    => $onsuccess,
+        verbose      => $verbose,
+        upload_log   => $upload_log,
+        http_path    => $http_path,
+        http_port    => $http_port,
+        enable_rsync => $enable_rsync,
+      } 
   }
 
   class {'edeploy::webserver' :
