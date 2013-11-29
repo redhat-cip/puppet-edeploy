@@ -100,19 +100,6 @@
 # [*state*]
 #   (hash) State file tuple
 #
-# === Examples
-#
-#  class {'edeploy' :
-#    rsync_exports     => {'install' => {'path' => '/var/lib/debootstrap/install', 'comment' => 'The Install Path'},
-#                          'metadata' => {'path' => '/var/lib/debootstrap/metadata', 'comment' => 'The Metadata Path'},},
-#    onfailure         => 'console',
-#    http_port         => 80,
-#    http_path         => '/',
-#    upload_log        => 1,
-#    onsuccess         => 'kexec',
-#    webserver_docroot => '/var/www/edeploy',
-#  }
-#
 class edeploy (
   $rsync_exports         = {},
   $rsync_max_connections = '50',
