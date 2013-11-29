@@ -31,9 +31,9 @@
 #   Refer to Class['edeploy']
 #
 class edeploy::installation (
-  $giturl,
-  $installdir,
-  $webserver_docroot,
+  $giturl            = undef,
+  $installdir        = undef,
+  $webserver_docroot = undef,
 ) {
 
   exec { "git clone ${giturl} ${installdir}/edeploy" :

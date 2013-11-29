@@ -43,13 +43,13 @@
 #   Refer to Class['edeploy']
 #
 class edeploy::webserver (
-  $docroot,
-  $access_log = true,
+  $docroot     = undef,
+  $access_log  = true,
   $access_file = '/var/log/httpd/edeploy_access_log.log',
-  $error_log = true,
-  $error_file = '/var/log/httpd/edploy_error_log.log',
-  $port = 80,
-  $address = undef
+  $error_log   = true,
+  $error_file  = '/var/log/httpd/edploy_error_log.log',
+  $port        = 80,
+  $address     = undef
 ) {
 
 

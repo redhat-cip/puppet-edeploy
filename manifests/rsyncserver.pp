@@ -40,12 +40,12 @@
 #   (string) Enable the use of chroot
 #
 class edeploy::rsyncserver (
-  $exports,
-  $max_connections,
-  $address,
-  $use_xinetd = true,
-  $motd_file = 'UNSET',
-  $use_chroot = 'yes'
+  $exports         = undef,
+  $max_connections = undef,
+  $address         = undef,
+  $use_xinetd      = true,
+  $motd_file       = undef,
+  $use_chroot      = true
 ) {
 
   class {'rsync::server':

@@ -43,13 +43,13 @@
 #   Refer to Class['edeploy']
 #
 class edeploy::configuration (
-  $healthdir,
-  $configdir,
-  $logdir,
-  $hwdir,
-  $lockfile,
-  $usepxemngr,
-  $state
+  $healthdir  = undef,
+  $configdir  = undef,
+  $logdir     = undef,
+  $hwdir      = undef,
+  $lockfile   = undef,
+  $usepxemngr = undef,
+  $state      = undef
 ) {
 
   file {'/etc/edeploy.conf' :

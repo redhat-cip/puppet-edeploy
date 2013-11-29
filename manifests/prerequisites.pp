@@ -73,26 +73,26 @@
 #   Refer to Class['edeploy']
 #
 class edeploy::prerequisites (
-    $address,
-    $tftproot,
-    $serv,
-    $rserv,
-    $rserv_port,
-    $hserv,
-    $hserv_port,
-    $onfailure,
-    $onsuccess,
-    $verbose,
-    $upload_log,
-    $http_path,
-    $http_port,
-    $rsync_exports,
-    $rsync_max_connections,
-    $webserver_docroot,
-    $webserver_port
+    $address               = undef,
+    $tftproot              = undef,
+    $serv                  = undef,
+    $rserv                 = undef,
+    $rserv_port            = undef,
+    $hserv                 = undef,
+    $hserv_port            = undef,
+    $onfailure             = undef,
+    $onsuccess             = undef,
+    $verbose               = undef,
+    $upload_log            = undef,
+    $http_path             = undef,
+    $http_port             = undef,
+    $rsync_exports         = undef,
+    $rsync_max_connections = undef,
+    $webserver_docroot     = undef,
+    $webserver_port        = undef
 ) {
 
-  require devtools
+  include devtools
   include edeploy::params
 
   package {$edeploy::params::packages :

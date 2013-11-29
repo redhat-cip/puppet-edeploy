@@ -73,23 +73,23 @@
 #   (boolean) Enable inetd
 #
 class edeploy::tftpserver (
-  $address,
-  $serv,
-  $rserv,
-  $rserv_port,
-  $hserv,
-  $hserv_port,
-  $onfailure,
-  $onsuccess,
-  $verbose,
-  $upload_log,
-  $http_path,
-  $http_port,
-  $port = $tftp::params::port,
-  $directory = $tftp::params::directory,
-  $username = $tftp::params::username,
-  $options = $tftp::params::options,
-  $inetd = $tftp::params::inetd
+  $address    = undef,
+  $serv       = undef,
+  $rserv      = undef,
+  $rserv_port = undef,
+  $hserv      = undef,
+  $hserv_port = undef,
+  $onfailure  = undef,
+  $onsuccess  = undef,
+  $verbose    = undef,
+  $upload_log = undef,
+  $http_path  = undef,
+  $http_port  = undef,
+  $port       = $tftp::params::port,
+  $directory  = $tftp::params::directory,
+  $username   = $tftp::params::username,
+  $options    = $tftp::params::options,
+  $inetd      = $tftp::params::inetd
 ) inherits tftp::params {
 
   class {'tftp' :
