@@ -7,8 +7,10 @@ LABEL eDeploy
        KERNEL vmlinuz
        INITRD initrd.pxe
        APPEND <% if @serv -%>SERV=<%= @serv %> <% end -%>
+<% if @enable_rsync -%>
 <% if @rserv -%>RSERV=<%= @rserv %> <% end -%>
 <% if @rserv_port -%>RSERV_PORT=<%= @rserv_port %> <% end -%>
+<% end -%>
 <% if @hserv -%>HSERV=<%= @hserv %> <% end -%>
 <% if @hserv_port -%>HSERV_PORT=<%= @hserv_port %> <% end -%>
 <% if @onfailure -%>ONFAILURE=<%= @onfailure %> <% end -%>

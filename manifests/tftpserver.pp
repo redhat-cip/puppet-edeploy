@@ -57,6 +57,9 @@
 # [*http_port*]
 #   Refer to Class['edeploy']
 #
+# [*enable_rsync*]
+#   Refer to Class['edeploy']
+#
 # [*port*]
 #   (integer) Port the tftp server will listen on
 #
@@ -73,23 +76,24 @@
 #   (boolean) Enable inetd
 #
 class edeploy::tftpserver (
-  $address    = undef,
-  $serv       = undef,
-  $rserv      = undef,
-  $rserv_port = undef,
-  $hserv      = undef,
-  $hserv_port = undef,
-  $onfailure  = undef,
-  $onsuccess  = undef,
-  $verbose    = undef,
-  $upload_log = undef,
-  $http_path  = undef,
-  $http_port  = undef,
-  $port       = $tftp::params::port,
-  $directory  = $tftp::params::directory,
-  $username   = $tftp::params::username,
-  $options    = $tftp::params::options,
-  $inetd      = $tftp::params::inetd
+  $address      = undef,
+  $serv         = undef,
+  $rserv        = undef,
+  $rserv_port   = undef,
+  $hserv        = undef,
+  $hserv_port   = undef,
+  $onfailure    = undef,
+  $onsuccess    = undef,
+  $verbose      = undef,
+  $upload_log   = undef,
+  $http_path    = undef,
+  $http_port    = undef,
+  $enable_rsync = undef,
+  $port         = $tftp::params::port,
+  $directory    = $tftp::params::directory,
+  $username     = $tftp::params::username,
+  $options      = $tftp::params::options,
+  $inetd        = $tftp::params::inetd
 ) inherits tftp::params {
 
   class {'tftp' :

@@ -28,6 +28,9 @@
 # [*rsync_max_connections*]
 #   (integer) Number of max connections per export
 #
+# [*enable_rsync*]
+#   (boolean) Enable the rsync server
+#
 # [*webserver_docroot*]
 #   (string) Path to store eDeploy python script HTTP accessible (upload.py)
 #
@@ -110,6 +113,7 @@
 class edeploy (
   $rsync_exports         = {},
   $rsync_max_connections = '50',
+  $enable_rsync          = true,
   $webserver_docroot     = '/var/www/edeploy',
   $webserver_port        = 80,
   $giturl                = 'https://github.com/enovance/edeploy.git',
@@ -153,6 +157,7 @@ class edeploy (
     http_port             => $http_port,
     rsync_exports         => $rsync_exports,
     rsync_max_connections => $rsync_max_connections,
+    enable_rsync          => $enable_rsync,
     webserver_docroot     => $webserver_docroot,
     webserver_port        => $webserver_port,
   }

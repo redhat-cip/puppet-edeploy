@@ -66,6 +66,9 @@
 # [*rsync_max_connections*]
 #   Refer to Class['edeploy']
 #
+# [*enable_rsync*]
+#   Refer to Class['edeploy']
+#
 # [*webserver_docroot*]
 #   Refer to Class['edeploy']
 #
@@ -88,6 +91,7 @@ class edeploy::prerequisites (
     $http_port             = undef,
     $rsync_exports         = undef,
     $rsync_max_connections = undef,
+    $enable_rsync          = undef,
     $webserver_docroot     = undef,
     $webserver_port        = undef
 ) {
@@ -108,32 +112,34 @@ class edeploy::prerequisites (
     }
   }
 
-  class {'edeploy::tftpserver' :
-    address    => $address,
-    directory  => $tftproot,
-    serv       => $serv,
-    rserv      => $rserv,
-    rserv_port => $rserv_port,
-    hserv      => $hserv,
-    hserv_port => $hserv_port,
-    onfailure  => $onfailure,
-    onsuccess  => $onsuccess,
-    verbose    => $verbose,
-    upload_log => $upload_log,
-    http_path  => $http_path,
-    http_port  => $http_port,
-    require    => Package[$edeploy::params::packages],
+  if $enable_rsync {
+      class {'edeploy::rsyncserver' :
+        exports         => $rsync_exports,
+        max_connections => $rsync_max_connections,
+        address         => $address,
+      }
   }
-  class {'edeploy::rsyncserver' :
-    exports         => $rsync_exports,
-    max_connections => $rsync_max_connections,
-    address         => $address,
-    require         => Class['edeploy::tftpserver'],
-  } ->
+
+  class {'edeploy::tftpserver' :
+    address      => $address,
+    directory    => $tftproot,
+    serv         => $serv,
+    rserv        => $rserv,
+    rserv_port   => $rserv_port,
+    hserv        => $hserv,
+    hserv_port   => $hserv_port,
+    onfailure    => $onfailure,
+    onsuccess    => $onsuccess,
+    verbose      => $verbose,
+    upload_log   => $upload_log,
+    http_path    => $http_path,
+    http_port    => $http_port,
+    enable_rsync => $enable_rsync,
+  }
+
   class {'edeploy::webserver' :
     docroot => $webserver_docroot,
     port    => $webserver_port,
-    require => Class['edeploy::rsyncserver'],
   }
 
 }
