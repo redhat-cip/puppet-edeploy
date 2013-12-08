@@ -78,6 +78,15 @@
 # [*webserver_port*]
 #   Refer to Class['edeploy']
 #
+# [*enable_http_install*]
+#   Refer to Class['edeploy']
+#
+# [*http_install_docroot*]
+#   Refer to Class['edeploy']
+#
+# [*http_install_port*]
+#   Refer to Class['edeploy']
+#
 class edeploy::prerequisites (
     $address               = undef,
     $enable_tftp           = undef,
@@ -97,7 +106,11 @@ class edeploy::prerequisites (
     $rsync_max_connections = undef,
     $enable_rsync          = undef,
     $webserver_docroot     = undef,
-    $webserver_port        = undef
+    $webserver_port        = undef,
+    $enable_http_install   = undef,
+    $http_install_docroot  = undef,
+    $http_install_port     = undef,
+
 ) {
 
   include devtools
@@ -144,8 +157,12 @@ class edeploy::prerequisites (
   }
 
   class {'edeploy::webserver' :
-    docroot => $webserver_docroot,
-    port    => $webserver_port,
+    docroot              => $webserver_docroot,
+    port                 => $webserver_port,
+    enable_http_install  => $enable_http_install,
+    http_install_docroot => $http_install_docroot,
+    http_install_port    => $http_install_port,
+
   }
 
 }

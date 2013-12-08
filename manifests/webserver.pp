@@ -42,14 +42,34 @@
 # [*address*]
 #   Refer to Class['edeploy']
 #
+# [*enable_http_install*]
+#   Refer to Class['edeploy']
+#
+# [*http_install_docroot*]
+#   Refer to Class['edeploy']
+#
+# [*http_install_port*]
+#   Refer to Class['edeploy']
+#
+# [*http_install_access_log*]
+#   Refer to Class['edeploy']
+#
+# [*http_install_error_log*]
+#   Refer to Class['edeploy']
+#
 class edeploy::webserver (
-  $docroot     = undef,
-  $access_log  = true,
-  $access_file = '/var/log/httpd/edeploy_access_log.log',
-  $error_log   = true,
-  $error_file  = '/var/log/httpd/edploy_error_log.log',
-  $port        = 80,
-  $address     = undef
+  $docroot                 = undef,
+  $access_log              = true,
+  $access_file             = '/var/log/httpd/edeploy_access_log.log',
+  $error_log               = true,
+  $error_file              = '/var/log/httpd/edploy_error_log.log',
+  $port                    = 80,
+  $address                 = undef,
+  $enable_http_install     = true,
+  $http_install_docroot    = '/var/lib/deboostrap/',
+  $http_install_port       = 80,
+  $http_install_access_log = true,
+  $http_install_error_log  = true,
 ) {
 
 
@@ -63,6 +83,16 @@ class edeploy::webserver (
     access_log      => $access_log,
     error_log       => $error_log,
     custom_fragment => 'AddHandler cgi-script .cgi .py',
+  }
+
+  if $enable_http_install {
+    apache::vhost{'install.edeploy.example.com' :
+      docroot    => $http_install_docroot,
+      port       => $http_install_port,
+      options    => ['Indexes', 'FollowSymLinks', 'MultiViews'],
+      access_log => $http_install_access_log,
+      error_log  => $http_install_error_log,
+    }
   }
 
 }

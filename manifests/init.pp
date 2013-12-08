@@ -34,6 +34,18 @@
 # [*webserver_docroot*]
 #   (string) Path to store eDeploy python script HTTP accessible (upload.py)
 #
+# [*webserver_port*]
+#   (integer) HTTP Port to reach eDeploy python script (upload.py)
+#
+# [*enable_http_install*]
+#   (boolean) Enable HTTP installation process
+#
+# [*http_install_docroot*]
+#   (string) Path to OS archives (.edeploy) 
+#
+# [*http_install_port*]
+#   (integer) HTTP Port to access OS archives (.edeploy)
+#
 # [*giturl*]
 #   (string) GIT url where the eDeploy project should be retrieved from
 #
@@ -106,6 +118,9 @@ class edeploy (
   $enable_rsync          = true,
   $webserver_docroot     = '/var/www/edeploy',
   $webserver_port        = 80,
+  $enable_http_install   = true,
+  $http_install_docroot  = '/var/lib/debootstrap',
+  $http_install_port     = 80,
   $giturl                = 'https://github.com/enovance/edeploy.git',
   $installdir            = '/var/lib',
   $healthdir             = '/var/lib/edeploy/health/',
@@ -152,6 +167,9 @@ class edeploy (
     enable_rsync          => $enable_rsync,
     webserver_docroot     => $webserver_docroot,
     webserver_port        => $webserver_port,
+    enable_http_install   => $enable_http_install,
+    http_install_docroot  => $http_install_docroot,
+    http_install_port     => $http_install_port,
   }
   class {'edeploy::installation' :
     giturl            => $giturl,
