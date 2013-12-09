@@ -147,6 +147,26 @@ class edeploy (
 
   include stdlib
 
+  validate_bool($enable_rsync)
+  validate_bool($enable_tftp)
+  validate_bool($enable_http_install)
+  validate_bool($usepxemngr)
+  validate_hash($rsync_exports)
+  validate_hash($state)
+  validate_absolute_path($webserver_docroot)
+  validate_absolute_path($http_install_docroot)
+  validate_absolute_path($installdir)
+  validate_absolute_path($healthdir)
+  validate_absolute_path($configdir)
+  validate_absolute_path($logdir)
+  validate_absolute_path($hwdir)
+  validate_absolute_path($lockfile)
+  validate_absolute_path($tftproot)
+  validate_absolute_path($http_path)
+  validate_string($onfailure)
+  validate_string($onsuccess)
+  validate_string($giturl)
+
   class {'edeploy::prerequisites' :
     address               => $::ipaddress,
     enable_tftp           => $enable_tftp,
