@@ -168,7 +168,7 @@ class edeploy (
   validate_string($giturl)
 
   class {'edeploy::prerequisites' :
-    address               => $::ipaddress,
+    address               => $serv,
     enable_tftp           => $enable_tftp,
     tftproot              => $tftproot,
     serv                  => $serv,
@@ -191,12 +191,14 @@ class edeploy (
     http_install_docroot  => $http_install_docroot,
     http_install_port     => $http_install_port,
   }
+
   class {'edeploy::installation' :
     giturl            => $giturl,
     installdir        => $installdir,
     webserver_docroot => $webserver_docroot,
     require           => Class['edeploy::prerequisites'],
   }
+
   class {'edeploy::configuration' :
     healthdir   => $healthdir,
     configdir   => $configdir,
