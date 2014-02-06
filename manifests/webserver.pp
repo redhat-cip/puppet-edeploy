@@ -77,6 +77,7 @@ class edeploy::webserver (
     default_vhost => false,
   }
   apache::vhost {'edeploy.example.com' :
+    aliases         => [ { alias => '/edeploy', path => $docroot } ],
     docroot         => $docroot,
     port            => $port,
     options         => ['Indexes','FollowSymLinks','MultiViews', 'ExecCGI'],
