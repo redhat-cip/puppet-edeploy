@@ -87,6 +87,9 @@
 # [*http_install_port*]
 #   Refer to Class['edeploy']
 #
+# [*install_apache*]
+#   Refer to Class['edeploy']
+#
 class edeploy::prerequisites (
     $address               = undef,
     $enable_tftp           = undef,
@@ -110,7 +113,7 @@ class edeploy::prerequisites (
     $enable_http_install   = undef,
     $http_install_docroot  = undef,
     $http_install_port     = undef,
-
+    $install_apache        = true,
 ) {
 
   include devtools
@@ -162,7 +165,7 @@ class edeploy::prerequisites (
     enable_http_install  => $enable_http_install,
     http_install_docroot => $http_install_docroot,
     http_install_port    => $http_install_port,
-
+    install_apache       => $install_apache,
   }
 
 }

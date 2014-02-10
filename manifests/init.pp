@@ -40,6 +40,9 @@
 # [*enable_http_install*]
 #   (boolean) Enable HTTP installation process
 #
+# [*install_apache*]
+#   (boolean) Whether to install the apache package. Defaults to false
+#
 # [*http_install_docroot*]
 #   (string) Path to OS archives (.edeploy) 
 #
@@ -119,6 +122,7 @@ class edeploy (
   $webserver_docroot     = '/var/www/edeploy',
   $webserver_port        = 80,
   $enable_http_install   = true,
+  $install_apache        = true,
   $http_install_docroot  = '/var/lib/debootstrap',
   $http_install_port     = 80,
   $giturl                = 'https://github.com/enovance/edeploy.git',
@@ -187,6 +191,7 @@ class edeploy (
     enable_rsync          => $enable_rsync,
     webserver_docroot     => $webserver_docroot,
     webserver_port        => $webserver_port,
+    install_apache        => $install_apache,
     enable_http_install   => $enable_http_install,
     http_install_docroot  => $http_install_docroot,
     http_install_port     => $http_install_port,
