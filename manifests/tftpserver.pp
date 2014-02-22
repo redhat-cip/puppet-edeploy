@@ -104,6 +104,11 @@ class edeploy::tftpserver (
     options   => $options,
     inetd     => $inetd
   } ->
+  file {"${directory}" :
+    ensure => directory,
+    owner => $username,
+    group => $username,
+  } ->
   tftp::file { 'pxelinux.0':
     source => 'puppet:///modules/edeploy/tftpserver/pxelinux.0',
   } ->

@@ -70,13 +70,17 @@ class edeploy::webserver (
   $http_install_port       = 80,
   $http_install_access_log = true,
   $http_install_error_log  = true,
+  $install_apache          = true,
 ) {
 
-
-  class {'apache' :
-    default_vhost => false,
+  if $install_apache {
+    class {'apache' :
+      default_vhost => false,
+    }
   }
+
   apache::vhost {'edeploy.example.com' :
+    aliases         => [ { alias => '/edeploy', path => $docroot } ],
     docroot         => $docroot,
     port            => $port,
     options         => ['Indexes','FollowSymLinks','MultiViews', 'ExecCGI'],
