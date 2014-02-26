@@ -24,10 +24,10 @@ class edeploy::params {
 
   case $::osfamily {
     'RedHat': {
-      $packages = ['python-mock', 'python-netaddr', 'python-ipaddr', 'pigz', 'debootstrap', 'qemu-kvm', 'git']
+      $packages = ['python-mock', 'python-netaddr', 'python-ipaddr', 'pigz', 'debootstrap', 'qemu-kvm', 'git', 'ansible']
     }
     'Debian': {
-      $packages = ['python-mock', 'python-netaddr', 'python-ipaddr', 'pigz', 'debootstrap', 'qemu-kvm', 'yum', 'qemu-utils', 'alien', 'python-openstack.nose-plugin', 'git']
+      $packages = ['python-mock', 'python-netaddr', 'python-ipaddr', 'pigz', 'debootstrap', 'qemu-kvm', 'yum', 'qemu-utils', 'alien', 'python-openstack.nose-plugin', 'git', 'ansible']
     }
     default: {
       fail("Unsupported OS : ${::osfamily}")
