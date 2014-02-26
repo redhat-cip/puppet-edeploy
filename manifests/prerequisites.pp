@@ -116,9 +116,31 @@ class edeploy::prerequisites (
   include devtools
   include edeploy::params
 
+  if $::osfamily == 'Debian' {
+    class { 'apt':
+      always_apt_update => true
+    }
+
+    class { 'apt::release':
+      release_id => $::lsbdistcodename
+    }
+
+    apt::source { 'debian_testing':
+      location => 'http://ftp.fr.debian.org/debian/',
+      release => 'testing',
+      repos => 'main contrib non-free',
+      required_packages => 'debian-keyring debian-archive-keyring',
+      key => '46925553',
+      key_server => 'subkeys.pgp.net',
+    }
+
+    Exec <| title=='apt_update' |> -> Package[$edeploy::params::packages]
+  }
+
   package {$edeploy::params::packages :
     ensure => installed,
   }
+
   # NOTE (spredzy) : Wheezy profile is missing in RHEL 6.4 debootstrap package
   #                  It's being create here. A request upstream might be done.
   if $::osfamily == 'RedHat' {
