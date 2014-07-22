@@ -31,27 +31,34 @@
 #   Refer to Class['edeploy']
 #
 class edeploy::installation (
-  $giturl            = undef,
-  $installdir        = undef,
-  $webserver_docroot = undef,
+  $rsync_enable      = $edeploy::rsync_enable,
+  $http_enable       = $edeploy::http_enable,
+  $tftp_enable       = $edeploy::tftp_enable,
+  $required_packages = $edeploy::required_packages,
+  $giturl            = $edeploy::giturl,
+  $installdir        = $edeploy::installdir,
 ) {
 
-  exec { "git clone ${giturl} ${installdir}/edeploy" :
-    unless => "ls ${installdir}/edeploy",
-    path   => ['/usr/bin', '/bin'],
-  }
-  exec { 'git pull origin' :
-    onlyif  => "ls ${installdir}/edeploy",
-    path    => ['/usr/bin', '/bin'],
-    cwd     => "${installdir}/edeploy",
-    require => Exec["git clone ${giturl} ${installdir}/edeploy"],
+  package { $required_packages :
+    ensure => present,
   }
 
-  # NOTE (spredzy) : Not idempotent, will be move copied everyrun atm.
-  #                  Might want to check if content is !=
-  exec { "cp ${installdir}/edeploy/server/*.py ${webserver_docroot}/" :
-    path    => '/bin',
-    require => [Exec['git pull origin'], Apache::Vhost['edeploy.example.com']],
+  if $rsync_enable {
+    include ::rsync::server
+  }
+
+  if $http_enable {
+    include ::apache
+  }
+
+  if $tftp_enable {
+    include ::tftp
+  }
+
+  vcsrepo { "${installdir}/edeploy" :
+    ensure   => present,
+    provider => git,
+    source   => $giturl,
   }
 
 }

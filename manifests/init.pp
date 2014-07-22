@@ -113,99 +113,41 @@
 #   (hash) State file tuple
 #
 class edeploy (
-  $rsync_exports         = {},
-  $rsync_max_connections = '50',
-  $enable_rsync          = true,
-  $webserver_docroot     = '/var/www/edeploy',
-  $webserver_port        = 80,
-  $enable_http_install   = true,
-  $http_install_docroot  = '/var/lib/debootstrap',
-  $http_install_port     = 80,
-  $giturl                = 'https://github.com/enovance/edeploy.git',
-  $installdir            = '/var/lib',
-  $healthdir             = '/var/lib/edeploy/health/',
-  $configdir             = '/var/lib/edeploy/config/',
-  $logdir                = '/var/lib/edeploy/config/logs',
-  $hwdir                 = '/var/lib/edeploy/hw/',
-  $lockfile              = '/tmp/edeploy.lock',
-  $usepxemngr            = false,
-  $enable_tftp           = true,
-  $tftproot              = '/var/lib/tftpboot',
-  $serv                  = $::ipaddress,
-  $rserv                 = $::ipaddress,
-  $rserv_port            = 873,
-  $hserv                 = $::ipaddress,
-  $hserv_port            = 80,
-  $onfailure             = 'console',
-  $onsuccess             = 'kexec',
-  $verbose               = 0,
-  $upload_log            = 1,
-  $http_path             = '/edeploy',
-  $http_port             = 80,
-  $state                 = {},
-) {
+  $rsync_enable                  = $edeploy::params::rsync_enable,
+  $http_enable                   = $edeploy::params::http_enable,
+  $tftp_enable                   = $edeploy::params::tftp_enable,
+  $pxemngr_enable                = $edeploy::params::pxemngr_enable,
+  $giturl                        = $edeploy::params::giturl,
+  $installdir                    = $edeploy::params::installdir,
+  $rsync_exports                 = $edeploy::params::rsync_exports,
+  $required_packages             = $edeploy::params::packages,
+  $edeploy_conf                  = $edeploy::params::edeploy_conf,
+  $boot_conf                     = $edeploy::params::boot_conf,
+  $state                         = $edeploy::params::state,
+  $vhost_pyscripts_configuration = $edeploy::params::vhost_pyscripts_configuration,
+  $vhost_install_configuration   = $edeploy::params::vhost_install_configuration,
+) inherits edeploy::params {
 
   include stdlib
+  include epel
 
-  validate_bool($enable_rsync)
-  validate_bool($enable_tftp)
-  validate_bool($enable_http_install)
-  validate_bool($usepxemngr)
-  validate_hash($rsync_exports)
-  validate_hash($state)
-  validate_absolute_path($webserver_docroot)
-  validate_absolute_path($http_install_docroot)
+  validate_bool($rsync_enable)
+  validate_bool($tftp_enable)
+  validate_bool($http_enable)
+  validate_bool($pxemngr_enable)
+
   validate_absolute_path($installdir)
-  validate_absolute_path($healthdir)
-  validate_absolute_path($configdir)
-  validate_absolute_path($logdir)
-  validate_absolute_path($hwdir)
-  validate_absolute_path($lockfile)
-  validate_absolute_path($tftproot)
-  validate_absolute_path($http_path)
-  validate_string($onfailure)
-  validate_string($onsuccess)
-  validate_string($giturl)
 
-  class {'edeploy::prerequisites' :
-    address               => $::ipaddress,
-    enable_tftp           => $enable_tftp,
-    tftproot              => $tftproot,
-    serv                  => $serv,
-    rserv                 => $rserv,
-    rserv_port            => $rserv_port,
-    hserv                 => $hserv,
-    hserv_port            => $hserv_port,
-    onfailure             => $onfailure,
-    onsuccess             => $onsuccess,
-    verbose               => $verbose,
-    upload_log            => $upload_log,
-    http_path             => $http_path,
-    http_port             => $http_port,
-    rsync_exports         => $rsync_exports,
-    rsync_max_connections => $rsync_max_connections,
-    enable_rsync          => $enable_rsync,
-    webserver_docroot     => $webserver_docroot,
-    webserver_port        => $webserver_port,
-    enable_http_install   => $enable_http_install,
-    http_install_docroot  => $http_install_docroot,
-    http_install_port     => $http_install_port,
-  }
-  class {'edeploy::installation' :
-    giturl            => $giturl,
-    installdir        => $installdir,
-    webserver_docroot => $webserver_docroot,
-    require           => Class['edeploy::prerequisites'],
-  }
-  class {'edeploy::configuration' :
-    healthdir   => $healthdir,
-    configdir   => $configdir,
-    logdir      => $logdir,
-    hwdir       => $hwdir,
-    lockfile    => $lockfile,
-    usepxemngr  => $usepxemngr,
-    state       => $state,
-    require     => Class['edeploy::installation'],
-  }
+  validate_array($required_packages)
+
+  validate_hash($state)
+  validate_hash($rsync_exports)
+  validate_hash($edeploy_conf)
+  validate_hash($boot_conf)
+  validate_hash($vhost_pyscripts_configuration)
+  validate_hash($vhost_install_configuration)
+
+  class {'edeploy::installation' : } ->
+    class {'edeploy::configuration' : }
 
 }

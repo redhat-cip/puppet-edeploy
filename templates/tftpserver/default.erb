@@ -6,16 +6,16 @@ serial 0
 LABEL eDeploy
        KERNEL vmlinuz
        INITRD initrd.pxe
-       APPEND <% if @serv -%>SERV=<%= @serv %> <% end -%>
-<% if @enable_rsync -%>
-<% if @rserv -%>RSERV=<%= @rserv %> <% end -%>
-<% if @rserv_port -%>RSERV_PORT=<%= @rserv_port %> <% end -%>
+       APPEND <% if @boot_conf['serv'] -%>SERV=<%= @boot_conf['serv'] %> <% end -%>
+<% if @rsync_enable -%>
+<% if @boot_conf['rserv'] -%>RSERV=<%= @boot_conf['rserv'] %> <% end -%>
+<% if @boot_conf['rserv_port'] -%>RSERV_PORT=<%= @boot_conf['rserv_port'] %> <% end -%>
 <% end -%>
-<% if @hserv -%>HSERV=<%= @hserv %> <% end -%>
-<% if @hserv_port -%>HSERV_PORT=<%= @hserv_port %> <% end -%>
-<% if @onfailure -%>ONFAILURE=<%= @onfailure %> <% end -%>
-<% if @onsuccess -%>ONSUCESS=<%= @onsuccess %> <% end -%>
-<% if @verbose -%>VERBOSE=<%= @verbose %> <% end -%>
-<% if @upload_log -%>UPLOAD_LOG=<%= @upload_log %> <% end -%>
-<% if @http_path -%>HTTP_PATH=<%= @http_path %> <% end -%>
-<% if @http_port -%>HTTP_PORT=<%= @http_port %> <% end -%>
+<% if @boot_conf['hserv'] -%>HSERV=<%= @boot_conf['hserv'] %> <% end -%>
+<% if @boot_conf['hserv_port'] -%>HSERV_PORT=<%= @boot_conf['hserv_port'] %> <% end -%>
+<% if @boot_conf['onfailure'] -%>ONFAILURE=<%= @boot_conf['onfailure'] %> <% end -%>
+<% if @boot_conf['onsuccess'] -%>ONSUCESS=<%= @boot_conf['onsuccess'] %> <% end -%>
+<% if @boot_conf['verbose'] -%>VERBOSE=<%= @boot_conf['verbose'] %> <% end -%>
+<% if @boot_conf['upload_log'] -%>UPLOAD_LOG=<%= @boot_conf['upload_log'] %> <% end -%>
+<% if @boot_conf['http_path'] -%>HTTP_PATH=<%= @boot_conf['http_path'] %> <% end -%>
+<% if @boot_conf['http_port'] -%>HTTP_PORT=<%= @boot_conf['http_port'] %> <% end -%>

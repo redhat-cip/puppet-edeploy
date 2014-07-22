@@ -43,23 +43,66 @@
 #   Refer to Class['edeploy']
 #
 class edeploy::configuration (
-  $healthdir  = undef,
-  $configdir  = undef,
-  $logdir     = undef,
-  $hwdir      = undef,
-  $lockfile   = undef,
-  $usepxemngr = undef,
-  $state      = undef
+  $pxemngr_enable                = $edeploy::pxemngr_enable,
+  $rsync_enable                  = $edeploy::rsync_enable,
+  $http_enable                   = $edeploy::http_enable,
+  $edeploy_conf                  = $edeploy::edeploy_conf,
+  $boot_conf                     = $edeploy::boot_conf,
+  $state                         = $edeploy::state,
+  $installdir                    = $edeploy::installdir,
+  $rsync_exports                 = $edeploy::rsync_exports,
+  $vhost_pyscripts_configuration = $edeploy::vhost_pyscripts_configuration,
+  $vhost_install_configuration   = $edeploy::vhost_install_configuration,
 ) {
+
+  $managed_hosts = [keys($vhost_pyscripts_configuration), keys($vhost_install_configuration)]
+  host {$managed_hosts :
+    ip => '127.0.0.1',
+  }
 
   file {'/etc/edeploy.conf' :
     ensure  => file,
     content => template('edeploy/etc/edeploy.conf.erb'),
   }
 
-  file {"${configdir}/state" :
+  file {"${edeploy_conf['configdir']}/state" :
     ensure  => file,
     content => template('edeploy/state.erb'),
+  }
+
+  if $rsync_enable {
+    # Configure the rsync shares
+    create_resources('rsync::server::module', $rsync_exports)
+  }
+
+  # Configure the vhost to enable the .py scripts
+  create_resources('apache::vhost', $vhost_pyscripts_configuration)
+
+  if $http_enable {
+    # Configure the vhost to distribute the .edploy file
+    create_resources('apache::vhost', $vhost_install_configuration)
+  }
+
+  # Configure tftp with proper pxelinux.0 and conf
+  if $rsync_enable {
+    file { [$::tftp::params::directory, "${::tftp::params::directory}/pxelinux.cfg"] :
+      ensure => directory,
+      owner  => $::tftp::params::username,
+      group  => $::tftp::params::username,
+      } ->
+      tftp::file { 'pxelinux.0':
+        source => 'puppet:///modules/edeploy/tftpserver/pxelinux.0',
+        } ->
+        tftp::file { 'pxelinux.cfg/default':
+          content => template('edeploy/tftpserver/default.erb'),
+        }
+  }
+
+  # NOTE (spredzy) : Not idempotent, will be move copied everyrun atm.
+  #                  Might want to check if content is !=
+  file {$vhost_pyscripts_configuration[join(keys($vhost_pyscripts_configuration))]['docroot'] :
+    ensure => link,
+    target => "${installdir}/edeploy/server/",
   }
 
 }

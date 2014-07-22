@@ -1,13 +1,13 @@
 [SERVER]
 
-HEALTHDIR   = <%= @healthdir %>
-CONFIGDIR   = <%= @configdir  %>
-LOGDIR      = <%= @logdir %>
-HWDIR       = <%= @hwdir %>
-LOCKFILE    = <%= @lockfile %>
-<% if @usepxemngr -%>
+HEALTHDIR   = <%= @edeploy_conf['healthdir'] %>
+CONFIGDIR   = <%= @edeploy_conf['configdir']  %>
+LOGDIR      = <%= @edeploy_conf['logdir'] %>
+HWDIR       = <%= @edeploy_conf['hwdir'] %>
+LOCKFILE    = <%= @edeploy_conf['lockfile'] %>
+<% if @pxemngr_enable -%>
 USEPXEMNGR  = <%= True %>
-PXEMNGRURL  = <%= @pxemngrurl %>
-METADATAURL = <%= @metadataurl %>
+PXEMNGRURL  = <%= @edeploy_conf['pxemngrurl'] %>
+METADATAURL = <%= @edeploy_conf['metadataurl'] %>
 <% end -%>
 

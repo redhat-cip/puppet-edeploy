@@ -8,6 +8,7 @@ description 'A Puppet module to deploy eDeploy'
 project_page 'https://github.com/Spredzy/puppet-edeploy'
 
 ## Add dependencies, if any:
+dependency 'puppetlabs/vcsrepo', '= 1.1.0'
 dependency 'puppetlabs/stdlib', '= 4.1.0'
 dependency 'puppetlabs/tftp', '= 0.2.1'
 dependency 'puppetlabs/rsync', '= 0.1.0'
